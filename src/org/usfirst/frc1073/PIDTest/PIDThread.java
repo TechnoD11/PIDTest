@@ -88,7 +88,7 @@ public class PIDThread implements Runnable {
 		isCapJoystick = false;
 		isTopSpeedAdjusted = false;
 		
-		topSpeed = 9;
+		topSpeed = 8.3f;
 		joystickCap = 1;
 	}
 
@@ -214,6 +214,11 @@ public class PIDThread implements Runnable {
 							+ (kD * derivativeBR);
 					previousErrorBR = errorBR;
 
+					outputFL = capOutput(outputFL);
+					outputFR = capOutput(outputFR);
+					outputBL = capOutput(outputBL);
+					outputBR = capOutput(outputBR);
+					
 					SmartDashboard.putNumber("Output for Front Left: ",
 							outputFL);
 					SmartDashboard.putNumber("Output for Front Right: ",
@@ -222,7 +227,7 @@ public class PIDThread implements Runnable {
 							.putNumber("Output for Back Left: ", outputBL);
 					SmartDashboard.putNumber("Output for Back Right: ",
 							outputBR);
-
+					
 					frontLeft.set(outputFL);
 					frontRight.set(outputFR);
 					backLeft.set(outputBL);
@@ -268,6 +273,16 @@ public class PIDThread implements Runnable {
 			}
 		}
 		return setpoints;
+	}
+	private double capOutput(double input){
+		if(input > 1.0){
+			return 1.0;
+		}
+		else if(input < -1.0){
+			return -1.0;
+		}
+		return input;
+		
 	}
 	public static void switchDriveMode(){
 		isPID = !isPID;
